@@ -1,4 +1,6 @@
 { 
-    "token": "Put your token here",
-    "prefix" : "!"
+    "token": "put your token here",
+    "prefix" : "!",
+    "twitch_client_id": "put your twitch client id here",
+    "twitch_client_secret" : "put you twitch client secret here"  
 }
