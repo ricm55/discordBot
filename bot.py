@@ -14,6 +14,10 @@ import random
 import json
 import os
 
+#import cogs
+#import youPlay
+#from cogs import youPlay
+
 #allow bot to track members
 intents = discord.Intents.default()
 intents.members = True
@@ -29,6 +33,13 @@ with open("json/gameList.json") as f:
     gameList = json.load(f)
 
 bot = commands.Bot(command_prefix=config["prefix"],intents=intents)
+
+#externe modules
+extensions = ['cogs.youPlay']
+
+if __name__ == '__main__':
+    for ex in extensions:
+        bot.load_extension(ex)
 
 game = cycle(gameList)
 
@@ -123,7 +134,7 @@ async def twitch_notif():
 async def on_ready():
     print('Bot is ready as {0.user}'.format(bot))
     change_status.start()
-    twitch_notif.start()
+    #twitch_notif.start()
 
 @bot.event
 async def on_member_join(member):
@@ -135,7 +146,6 @@ async def on_member_join(member):
     channel = guild.get_channel(member.guild.text_channels[0].id)
 
     await channel.send(f'Welcome to the server {member.mention} ! :partying_face:')
-
 
 @bot.event
 async def on_member_remove(member):
@@ -191,103 +201,6 @@ async def join(ctx):
 async def leave(ctx):
     print("leave the channel")
     await ctx.voice_client.disconnect()
-
-
-#play music with youtube video
-@bot.command()
-async def play(ctx,url):
-
-    await join(ctx)
-
-    voice = get(bot.voice_clients,guild=ctx.guild)
-
-    #if music is already playing
-    if not voice.is_playing():
-
-        #delete old song
-        song_there = os.path.isfile("song.mp3")
-        try:
-            if song_there:
-                os.remove("song.mp3")
-                print("Removed old song file")
-        except PermissionError:
-            print("Trying to delete everything ready now")
-            await ctx.send("ERROR: Music playing")
-            return
-        
-        voice = get(bot.voice_clients, guild=ctx.guild)
-
-        ydl_opts = {
-            "format":"bestaudio/best",
-            "postprocessors": [{
-                "key":"FFmpegExtractAudio",
-                "preferredcodec" : "mp3",
-                "preferredquality":"192",
-            }],
-        }
-
-        #download the video
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            print("Downloading audio now")
-            ydl.download([url])
-
-        for file in os.listdir("./"):
-            if file.endswith(".mp3"):
-                name = file
-                print(f"Renamed File: {file}\n")
-                os.rename(file,"song.mp3")
-        
-        #convert video to audio
-        voice.play(discord.FFmpegPCMAudio("song.mp3"), after=lambda e: print(f"{name} has finished playing"))
-        voice.source = discord.PCMVolumeTransformer(voice.source)
-        voice.source.volume = 0.07
-
-        #print the name of the songs in the channel
-        new_name = name.rsplit("-",2)
-        await ctx.send(f"Playing {new_name[0]}")
-        print("playing")
-    else:
-        await ctx.send(f"A music is already playing")
-
-@bot.command()
-async def pause(ctx):
-    
-    voice = get(bot.voice_clients,guild=ctx.guild)
-
-    #verify if the bot is in a channel and if he is playing music
-    if voice and voice.is_playing():
-        print("Music paused")
-        voice.pause()
-        await ctx.send("Music paused")
-    else:
-        print("Music not playing => failed pause")
-        await ctx.send("Music not playing => failed pause")
-
-@bot.command()
-async def resume(ctx):
-    voice = get(bot.voice_clients,guild=ctx.guild)
-
-    if voice and voice.is_paused():
-        print("Resumed music")
-        voice.resume()
-        await ctx.send("Resumed music")
-    else:
-        print("Music is not paused")
-        await ctx.send("Music is not paused")
-
-@bot.command()
-async def stop(ctx):
-    voice = get(bot.voice_clients,guild=ctx.guild)
-
-    #verify if the bot is in a channel and if he is playing music
-    if voice and voice.is_playing():
-        print("Music stopped")
-        voice.stop()
-        await ctx.send("Music stopped")
-        await leave(ctx)
-    else:
-        print("No music playing => failed to stop")
-        await ctx.send("No music playing => failed to stop")
 
 @bot.command()
 async def notifyme(ctx, url):
@@ -396,12 +309,14 @@ bot.run(config["token"])
 """
 Idea:
 
+create modules for twitch and youtube
+create rank system
+create help command in externe file
+modified readme for documentation
 Event
 RankSystem: a rank is determine by each user depending the number of messages they send
-add limits to live twitch
 Command:
-myRank: Show the user Rank
-NotifMe: Setup twitch channel to notif
+myRank: Show the user's Rank
 
 **add log system
 
