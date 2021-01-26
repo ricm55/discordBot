@@ -3,12 +3,14 @@ Idea:
 create rank system
 create help command in externe file
 modified readme for documentation
+add class for json file management
 
 Event
 RankSystem: a rank is determine by each user depending the number of messages, picture they send and other
 Command:
 myRank: Show user's Rank
 add module for user interaction (message management)
+!stop: delete audio file when finish playing or stop
 
 **add log system
 
