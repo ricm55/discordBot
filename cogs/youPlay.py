@@ -1,4 +1,4 @@
-#can play youtube music
+#can play music from youtube
 import os
 import discord
 import youtube_dl
@@ -9,14 +9,9 @@ from discord.utils import get
 class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    @commands.command()
-    async def allo(self, ctx):
-        print(f"{ctx.author}")
         
     @commands.command()
     async def play(self, ctx, url):
-        
         #bot joins channel
         channel = ctx.message.author.voice.channel
         await channel.connect()
