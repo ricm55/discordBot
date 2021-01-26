@@ -1,0 +1,27 @@
+Idea:
+
+create rank system
+create help command in externe file
+modified readme for documentation
+
+Event
+RankSystem: a rank is determine by each user depending the number of messages, picture they send and other
+Command:
+myRank: Show user's Rank
+add module for user interaction (message management)
+
+**add log system
+
+installation:
+linux/mac
+python3 -m pip install -U discord.py[voice]
+pip install discord.py --upgrade
+ffmpeg - <see the command line>
+youtube_dl - <see the command line>
+twitch - <see the command line>
+
+Windows
+py -3 -m pip install -U discord.py[voice]
+ffmpeg on the site (put in C: and setup variable environnement )
+python -m pip install -U youtube_dl
+python -m pip install twitch-python
